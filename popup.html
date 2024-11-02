@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body {
+      width: 600px;
+      margin: 0;
+      padding: 15px;
+      background: transparent;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background-color: black;
+    }
+
+    #container {
+      position: relative;
+    }
+
+    #input-box {
+      width: calc(100% - 40px);
+      padding: 12px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 12px;
+      background: rgba(30, 30, 30, 0.8);
+      color: #ffffff;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 4px 25px rgba(90, 103, 216, 0.2);
+      transition: all 0.3s ease;
+    }
+
+    #input-box:focus {
+      outline: none;
+      background: rgba(40, 40, 40, 0.9);
+      box-shadow: 0 4px 30px rgba(90, 103, 216, 0.3);
+    }
+
+    #chat-area {
+      display: none;
+      margin-bottom: 15px;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .question {
+      color: #a5b4fc;
+      margin-bottom: 10px;
+      font-size: 15px;
+      padding: 10px;
+      background: rgba(30, 30, 30, 0.6);
+      border-radius: 8px;
+      backdrop-filter: blur(8px);
+    }
+
+    .response {
+      color: #ffffff;
+      font-size: 15px;
+      line-height: 1.5;
+      margin-bottom: 15px;
+      padding: 10px;
+      background: rgba(30, 30, 30, 0.6);
+      border-radius: 8px;
+      backdrop-filter: blur(8px);
+      white-space: pre-wrap;
+    }
+
+    .typing::after {
+      content: '▋';
+      animation: blink 1s infinite;
+    }
+
+    @keyframes blink {
+      50% { opacity: 0; }
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .fade-in {
+      animation: fadeIn 0.3s ease forwards;
+    }
+  </style>
+</head>
+<body>
+  <div id="container">
+    <div id="chat-area">
+      <div class="question"></div>
+      <div class="response"></div>
+    </div>
+    <input type="text" id="input-box" placeholder="Ask Suva..." autofocus>
+  </div>
+  <script src="popup.js"></script>
+  <script src="config.js"></script>
+</body>
+</html>
