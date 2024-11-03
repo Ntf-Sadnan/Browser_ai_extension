@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const questionDiv = document.querySelector('.question');
   const responseDiv = document.querySelector('.response');
   const geminiApiKey = GEMINI_API;
-  const geminiVisionUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent';
+  const geminiVisionUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro-002:generateContent';
   let uploadedImage = null;
 
   // Create image preview container
