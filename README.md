@@ -13,6 +13,7 @@ This is browser extension for fast, in-browser AI assistance using Meta’s LLAM
 - **Shortcut Activation**: Use `Ctrl + I` to launch the assistant.
 - **Configurable API**: Default setup uses LLAMA 3.2 via Groq, customizable in `config.js`.
 - **Vision capability** added using Gemini Api.
+- **Quick Screenshot** added for asking questions regarding topics on screen
 - Context window of last 5 messages.
 
 ## Demo
@@ -24,6 +25,9 @@ This is browser extension for fast, in-browser AI assistance using Meta’s LLAM
 
 ![image](https://github.com/user-attachments/assets/ce6aa824-d076-410b-9f64-7a1cf598b22c)
 
+`~` to take Screenshot and ask questions on whats going on your screen.
+
+[demo.webm](https://github.com/user-attachments/assets/58263cd2-fcf9-44cf-a327-b7bc82bc188f)
 
 ## Setup
 
