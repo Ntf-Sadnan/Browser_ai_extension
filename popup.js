@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const chatArea = document.getElementById('chat-area');
   const questionDiv = document.querySelector('.question');
   const responseDiv = document.querySelector('.response');
-  const geminiApiKey = 'GEMINI_API';
+  const geminiApiKey = GEMINI_API;
   const geminiVisionUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent';
   let uploadedImage = null;
 
@@ -23,21 +23,25 @@ document.addEventListener('DOMContentLoaded', () => {
   input.parentElement.style.position = 'relative';
   input.parentElement.appendChild(imagePreviewContainer);
 
-  const systemPrompt = 'You are Suva Ai. You are student study assistant. You are made by NTF Sadnan & Mubtasim. You reply short and precise and do not give extra info. You can see image.';
+  const systemPrompt = 'You are Suva Ai. You are student study assistant. You are made by NTF Sadnan. You reply short and precise and do not give extra info. You can see image.';
 
   let messageHistory = [
     { role: 'system', content: systemPrompt }
   ];
 
   async function typeText(text, element) {
-    element.textContent = '';
-    const delay = 10; // Milliseconds between each character
-    for (let i = 0; i < text.length; i++) {
-      element.textContent += text[i];
-      await new Promise(resolve => setTimeout(resolve, delay));
-      chatArea.scrollIntoView({ behavior: 'smooth', block: 'end' });
+    element.textContent = '';  
+    let index = 0; 
+
+    while (index < text.length) {
+        element.textContent += text[index];  
+        index++;
+        await new Promise(resolve => setTimeout(resolve, Math.random() * 10 + 5)); 
+        element.scrollIntoView({ behavior: 'smooth', block: 'end' });  
     }
   }
+  
+  
 
   function updateImagePreview(file) {
     const reader = new FileReader();
@@ -50,6 +54,27 @@ document.addEventListener('DOMContentLoaded', () => {
       imagePreviewContainer.style.display = 'block';
     };
     reader.readAsDataURL(file);
+  }
+
+  // Function to capture screenshot
+  async function captureScreenshot() {
+    try {
+      // Send message to background script to capture screen
+      const response = await chrome.runtime.sendMessage({action: "capture"});
+      
+ 
+      const res = await fetch(response.dataUrl);
+      const blob = await res.blob();
+      
+ 
+      uploadedImage = new File([blob], 'screenshot.png', { type: 'image/png' });
+      updateImagePreview(uploadedImage);
+      input.placeholder = 'Screenshot captured! Type your question...';
+      
+    } catch (err) {
+      console.error('Screenshot error:', err);
+      alert('Failed to capture screenshot.');
+    }
   }
 
   function fileToBase64(file) {
@@ -123,15 +148,12 @@ document.addEventListener('DOMContentLoaded', () => {
           const base64Image = await fileToBase64(uploadedImage);
           responseText = await analyzeImageWithGemini(base64Image, userInput);
           
-          
           uploadedImage = null;
           input.placeholder = 'Ask Suva...';
-          // Type out the Gemini response
           await typeText(responseText, responseDiv);
         } else {
-          // Existing Groq API code...
-          const apiKey = 'GROQ_API';
-          const model = 'MODEL';
+          const apiKey = GROQ_API;
+          const model = MODEL;
           const apiUrl = 'https://api.groq.com/openai/v1/chat/completions';
           imagePreviewContainer.style.display = 'none';
           const res = await fetch(apiUrl, {
@@ -194,19 +216,42 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Add "+" button functionality
+  // Create and style buttons container
+  const buttonsContainer = document.createElement('div');
+  buttonsContainer.style.position = 'absolute';
+  buttonsContainer.style.right = '10px';
+  buttonsContainer.style.bottom = '8px';
+  buttonsContainer.style.display = 'flex';
+  buttonsContainer.style.gap = '10px';
+  document.getElementById('container').appendChild(buttonsContainer);
+
+  // Add screenshot button
+  const screenshotButton = document.createElement('button');
+  screenshotButton.innerHTML = '~';
+  screenshotButton.style.cssText = `
+    background: transparent;
+    border: none;
+    color: #fff;
+    font-size: 20px;
+    cursor: pointer;
+    padding: 0;
+  `;
+  
+  // Add upload button
   const uploadButton = document.createElement('button');
   uploadButton.textContent = "+";
-  uploadButton.style.position = 'absolute';
-  uploadButton.style.right = '10px';
-  uploadButton.style.bottom = '8px';
-  uploadButton.style.background = 'transparent';
-  uploadButton.style.border = 'none';
-  uploadButton.style.color = '#fff';
-  uploadButton.style.fontSize = '20px';
-  uploadButton.style.cursor = 'pointer';
-  
-  document.getElementById('container').appendChild(uploadButton);
+  uploadButton.style.cssText = `
+    background: transparent;
+    border: none;
+    color: #fff;
+    font-size: 20px;
+    cursor: pointer;
+    padding: 0;
+  `;
+
+  // Add buttons to container
+  buttonsContainer.appendChild(screenshotButton);
+  buttonsContainer.appendChild(uploadButton);
 
   // Create invisible file input
   const imageUpload = document.createElement('input');
@@ -222,6 +267,9 @@ document.addEventListener('DOMContentLoaded', () => {
     updateImagePreview(uploadedImage);
     input.placeholder = `Image uploaded: ${uploadedImage.name}`;
   });
+
+  // Handle screenshot button click
+  screenshotButton.addEventListener('click', captureScreenshot);
 
   // Handle pasted images
   document.addEventListener('paste', (event) => {
