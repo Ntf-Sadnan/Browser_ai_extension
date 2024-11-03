@@ -3,10 +3,13 @@
   "name": "Suva AI Assistant",
   "version": "1.0",
   "description": "Quick access to Suva AI with Ctrl+I",
-  "permissions": ["commands", "storage" , "https://generativelanguage.googleapis.com/"],
+  "permissions": ["commands", "storage" , "https://generativelanguage.googleapis.com/", "activeTab", "desktopCapture","tabs" ],
   "icons": { "128": "icon.png" },
   "action": {
     "default_popup": "popup.html"
+  },
+  "background": {
+    "service_worker": "background.js"
   },
   "commands": {
     "_execute_action": {
